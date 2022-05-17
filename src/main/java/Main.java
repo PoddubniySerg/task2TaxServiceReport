@@ -4,13 +4,13 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.LongAdder;
 
 public class Main {
-    public static final int SHOP_COUNT = 3;
+    public static final int SHOP_COUNT = 100000;
 
     public static void main(String[] args) throws InterruptedException {
         LongAdder account = new LongAdder();
         ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         for (int i = 0; i < SHOP_COUNT; i++) {
-            executorService.submit(() -> new Shop(account, executorService).sum());
+            executorService.submit(() -> new Shop(account).sum());
         }
         executorService.awaitTermination(3, TimeUnit.SECONDS);
         executorService.shutdown();

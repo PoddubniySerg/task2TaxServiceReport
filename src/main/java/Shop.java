@@ -1,11 +1,10 @@
 import java.util.Arrays;
 import java.util.Random;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.LongAdder;
 
 public class Shop {
-    private static AtomicInteger count = new AtomicInteger(1);
+    private static final AtomicInteger COUNT = new AtomicInteger(1);
     private static final int MIN_SELL_COUNT = 4;
     private static final int MAX_SELL_COUNT = 10;
     private static final int MIN_PRICE = 100;
@@ -14,12 +13,9 @@ public class Shop {
 
     private final int shopId;
 
-    private final ExecutorService executorService;
-
-    public Shop(LongAdder account, ExecutorService executorService) {
+    public Shop(LongAdder account) {
         this.account = account;
-        this.executorService = executorService;
-        this.shopId = count.getAndIncrement();
+        this.shopId = COUNT.getAndIncrement();
     }
 
     public void sum() {
@@ -29,6 +25,6 @@ public class Shop {
             money[i] = random.nextInt(MAX_PRICE) + MIN_PRICE;
         }
         System.out.println("Выручка магазина №" + this.shopId + ": " + Arrays.toString(money));
-        Arrays.stream(money).forEach(i -> this.executorService.submit(() -> this.account.add(i)));
+        Arrays.stream(money).forEach(this.account::add);
     }
 }
